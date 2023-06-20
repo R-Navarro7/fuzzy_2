@@ -101,7 +101,7 @@ R17 = [
 
 R18 = [
     ['animal es mamífero','animal puede volar','animal es feo'],
-    [('animal es murcielago', 0.9)]
+    [('animal es murciélago', 0.9)]
     ]
 
 R19 = [
@@ -170,7 +170,7 @@ def Conj_Hipotesis(BR):
   '''
 
   animals = ['tigre','cheetah','perro','elefante','jirafa','cebra',
-                  'murcielago','tortuga', 'gaviota','loro', 'avestruz']
+                  'murciélago','tortuga', 'gaviota','loro', 'avestruz']
   CH = {}
   for animal in animals:
     H = "animal es " + animal
