@@ -101,7 +101,7 @@ R17 = [
 
 R18 = [
     ['animal es mamífero','animal puede volar','animal es feo'],
-    [('animal es murciélago', 0.9)]
+    [('animal es murcielago', 0.9)]
     ]
 
 R19 = [
