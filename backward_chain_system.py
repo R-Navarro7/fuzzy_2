@@ -1,6 +1,6 @@
 from utils import *
 import pandas as pd
-import gui
+
 
 class Backward_Chain_System():
   def __init__(self, alpha=0.7, beta=0.2, gamma=0.85, eps=0.5):
@@ -14,9 +14,6 @@ class Backward_Chain_System():
 
     # Opcional 5.2
     self.marcas = {}
-
-    # Opcional 5.5
-    self.gui = gui
 
   def check_BH(self,trip):
     if trip in self.BH.keys():
@@ -38,15 +35,8 @@ class Backward_Chain_System():
     return R
 
   def ask_user(self, trip):
-    if self.gui:
-      q = f"Cual es el valor de certeza que tiene respecto a la siguiente afirmación: {trip}"
-      gui.q_var.set(q)
-      gui.button.wait_variable(gui.ans_var)
-      vc = float(gui.ans_var.get())
-      return vc
-    else:
-      user_input = input(f'\n Cual es el valor de certeza que tiene respecto a la siguiente afirmación: "{trip}" \n Ingrese un valor en el rango [-1,1]:   ')
-      return Hecho([trip,float(user_input)])
+    user_input = input(f'\n Cual es el valor de certeza que tiene respecto a la siguiente afirmación: "{trip}" \n Ingrese un valor en el rango [-1,1]:   ')
+    return Hecho([trip,float(user_input)])
 
   def add_to_BH(self,H):
     if abs(H.vc)>=self.beta:

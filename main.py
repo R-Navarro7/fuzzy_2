@@ -10,7 +10,10 @@ def main(bonus=False):
         AEI.check_hipotesis(h, bonus = bonus)
         if AEI.CH[h] >= AEI.alpha:
             print(f'La hipotesis "{h}" ha sido comprobada con un nivel de certeza {AEI.CH[h]}.')
-        return
+            claus_used = BR[AEI.get_rules(h)[0]].premisa
+            hechos_usados = [(claus,AEI.BH[claus]) for claus in claus_used]
+            print(f'Los hechos que han permitido esta conlusión han sido {[f"{H[0]} con certeza {H[1]}" for H in hechos_usados]}')
+            return
     # Si ninguna prediccion supera alfa se toma la con mayor valor de certeza
     vc_max = 0
     h_max = ''
@@ -22,6 +25,9 @@ def main(bonus=False):
         return
     else:
         print(f'La hipotesis "{h_max}" ha sido comprobada con un nivel de certeza {vc_max}.')
+        claus_used = BR[AEI.get_rules(h_max)[0]].premisa
+        hechos_usados = [(claus,AEI.BH[claus]) for claus in claus_used]
+        print(f'Los hechos que han permitido esta conlusión han sido {[f"{H[0]} con certeza {H[1]}" for H in hechos_usados]}')
         return
 
 if __name__ == '__main__':

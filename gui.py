@@ -2,7 +2,6 @@ from tkinter import *
 from utils import *
 from PIL import Image, ImageTk
 import pandas as pd
-import sys
 import os
 
 
@@ -221,7 +220,9 @@ def main_gui(bonus=False, gui = False):
         AEI.check_hipotesis(h, bonus = bonus)
         if AEI.CH[h] >= AEI.alpha:
             print(f'La hipotesis "{h}" ha sido comprobada con un nivel de certeza {AEI.CH[h]}.')
-            ans = f"El {h} con nivel de certeza {AEI.CH[h]:.2f}."
+            claus_used = BR[AEI.get_rules(h)[0]].premisa
+            hechos_usados = [(claus,AEI.BH[claus]) for claus in claus_used]
+            ans = f'El {h} con nivel de certeza {AEI.CH[h]}.\nLos hechos que han permitido esta conlusión han sido:\n{" | ".join([f"{H[0]} con certeza {H[1]}" for H in hechos_usados])}'
             path = f"img/{h.split(' ')[-1]}.jpg"
             final_var.set(ans)
             display_image(path)
@@ -241,7 +242,9 @@ def main_gui(bonus=False, gui = False):
         return
     else:
         print(f'La hipotesis "{h_max}" ha sido comprobada con un nivel de certeza {vc_max}.')
-        ans = f"El {h_max} con nivel de certeza {vc_max}."
+        claus_used = BR[AEI.get_rules(h_max)[0]].premisa
+        hechos_usados = [(claus,AEI.BH[claus]) for claus in claus_used]
+        ans = f'El {h_max} con nivel de certeza {vc_max}.\nLos hechos que han permitido esta conlusión han sido:\n{" | ".join([f"{H[0]} con certeza {H[1]}" for H in hechos_usados])}'
         path = f"img/{h_max.split(' ')[-1]}.jpg"
         final_var.set(ans)
         display_image(path)
