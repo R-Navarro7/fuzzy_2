@@ -1,4 +1,8 @@
 import numpy as np
+from tkinter import *
+from PIL import Image, ImageTk
+import sys
+import os
 
 R1 = [
     ['animal tiene pelo'],
@@ -202,3 +206,4 @@ def propagar(vc, Rule, eps):
       trig = True
       output.append(Hecho([hecho.trip, vc*hecho.vc]))
   return output
+
