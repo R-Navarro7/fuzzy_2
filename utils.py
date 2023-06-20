@@ -170,7 +170,7 @@ def Conj_Hipotesis(BR):
   '''
 
   animals = ['tigre','cheetah','perro','elefante','jirafa','cebra',
-                  'murciélago','tortuga', 'gaviota','loro', 'avestruz']
+                  'murcielago','tortuga', 'gaviota','loro', 'avestruz']
   CH = {}
   for animal in animals:
     H = "animal es " + animal
