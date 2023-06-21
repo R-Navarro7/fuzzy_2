@@ -100,21 +100,19 @@ class Backward_Chain_System():
     if bonus:
       premisa_vc = self.bonus_check_premisa(premisa)
       hip_conc = propagar(premisa_vc, rule, self.eps)
-      print(self.BH)
       if len(hip_conc):
         hip = hip_conc[0] # en este nivel solo puede haber 1 elemento en la conclusion
         self.CH[hip.trip] = hip.vc
     else:
       premisa_vc = self.check_premisa(premisa)
       hip_conc = propagar(premisa_vc, rule, self.eps)
-      print(self.BH)
       if len(hip_conc):
         hip = hip_conc[0] # en este nivel solo puede haber 1 elemento en la conclusion
         self.CH[hip.trip] = hip.vc
 
 
 #################### BONUS ##################################
-  # 5.1
+  #### 5.1 ####
   def precalificador(self, premisa):
     for claus in premisa:
       in_BH, vc = self.check_BH(claus)
@@ -122,13 +120,13 @@ class Backward_Chain_System():
         return False
     return True
 
-  # 5.2
+  #### 5.2 ####
   def add_to_marks(self, H): # Funcion que marca una clausula si el usuario presenta incertidumbre al llegar al Caso 3.
     if abs(H.vc) < self.beta:
       self.marcas[H.trip] = H.vc
       self.add_to_BH(H, marked=True)
 
-  # 5.3
+  #### 5.3 ####
   def generar_reticulado_BR(self):
     BR = self.BR
     reglas_id = BR.keys()
@@ -170,6 +168,48 @@ class Backward_Chain_System():
     }
     BR_df = pd.DataFrame(BR_dict)
     return BR_df
+  import numpy as np
+  ##### 5.4 #####
+  def ask_user_bonus(self, trip):  #self
+    q_bin = ['animal tiene trompa','animal vive en zoológico',
+                'animal vive con personas','animal come carne',
+                'animal pone huevos','animal da leche', 'animal tiene piel dura' ]
+    q_neg = ['animal puede volar', 'animal tiene rayas negras',
+              'animal tiene manchas oscuras','animal tiene pezuñas',
+              'animal tiene garras', 'animal tiene plumas','animal tiene pelo']
+    q_unk = ['animal es parlanchín','animal es doméstico']
+    q_range = ['animal vuela bien','animal es feo', 'animal corre rápido',
+                'animal tiene cuello largo', 'animal es grande']
+    q_conj = ['animal es mamífero', 'animal es ave', 'animal es reptil',
+                  'animal es ungulado','animal es carnívoro','animal es rumiante']
+
+    # Obtener tipo de pregunta con trip
+    Q = [trip in q_bin,trip in q_neg,trip in q_unk,trip in q_range,trip in q_conj]
+    idx = Q.index(True)
+    k=1
+    if idx == 0:
+      question = f'\nEs cierto que el {trip}  ? \
+      \nIngrese uno de los siguientes valores según su respuesta: 1:SI | -1: NO | 0:NO SE   '
+
+    if idx == 1:
+      k = -1
+      question = f'\nEs falso que el {trip}  ? \
+      \nIngrese uno de los siguientes valores según su respuesta: 1:SI | -1: NO | 0:NO SE   '
+
+    if idx == 2:
+      question = f'¿Usted sabe si el {trip}  ? \
+      \nIngrese uno de los siguientes valores según su respuesta: 1:SI | -1: NO | 0:NO SE   '
+
+    if idx == 3:
+      question = f'¿Que tan {trip.split()[-1]} diría que {trip.split()[-2]} el animal? \
+      \nIngrese un valor en el rango [-1,1]: '
+
+    if idx == 4:
+      question = f'¿Animal está en el conjunto de tipo {trip.split()[-1]}?  \
+      \nIngrese uno de los siguientes valores según su respuesta: 1:SI | -1: NO | 0:NO SE   '
+    user_input = input(question)
+    vc = user_input
+    return Hecho([trip,k*float(vc)])
 
   def bonus_check_premisa(self, premisa):
     premisa_vc = []
@@ -200,7 +240,7 @@ class Backward_Chain_System():
           else:
             if clause in self.marcas.keys(): pass # No se pregunta si la clausula esta marcada
             else:
-              h = self.ask_user(clause)
+              h = self.ask_user_bonus(clause)
               self.add_to_BH(h)
               self.add_to_marks(h)
 
@@ -212,7 +252,7 @@ class Backward_Chain_System():
       elif clause in self.marcas.keys():
         premisa_vc.append(self.marcas[clause])
       else:
-        h = self.ask_user(clause)
+        h = self.ask_user_bonus(clause)
         self.add_to_BH(h)
         self.add_to_marks(h)
         premisa_vc.append(h.vc)

@@ -37,14 +37,48 @@ class Backward_Chain_System_GUI():
         if hecho.trip == trip and abs(hecho.vc) >= self.eps:
           R.append(rule_id)
     return R
-
   def ask_user(self, trip):
-    q = f"Cual es el valor de certeza que tiene respecto a la siguiente afirmación: {trip}"
-    q_var.set(q)
-    button.wait_variable(ans_var)
-    H = Hecho([trip,float(ans_var.get())])
-    return H
 
+    q_bin = ['animal tiene trompa','animal vive en zoológico',
+                'animal vive con personas','animal come carne',
+                'animal pone huevos','animal da leche', 'animal tiene piel dura' ]
+    q_neg = ['animal puede volar', 'animal tiene rayas negras',
+              'animal tiene manchas oscuras','animal tiene pezuñas',
+              'animal tiene garras', 'animal tiene plumas','animal tiene pelo']
+    q_unk = ['animal es parlanchín','animal es doméstico']
+    q_range = ['animal vuela bien','animal es feo', 'animal corre rápido',
+                'animal tiene cuello largo', 'animal es grande']
+    q_conj = ['animal es mamífero', 'animal es ave', 'animal es reptil',
+                  'animal es ungulado','animal es carnívoro','animal es rumiante']
+
+    # Obtener tipo de pregunta con trip
+    Q = [trip in q_bin,trip in q_neg,trip in q_unk,trip in q_range,trip in q_conj]
+    idx = Q.index(True)
+    k=1
+    if idx == 0:
+      question = f'\nEs cierto que el {trip}  ? \
+      \nIngrese uno de los siguientes valores según su respuesta: -1:NO | 0: NO SÉ | 1:SI   '
+
+    if idx == 1:
+      k = -1
+      question = f'\nEs falso que el {trip}  ? \
+      \nIngrese uno de los siguientes valores según su respuesta: -1:NO | 0: NO SÉ | 1:SI   '
+    if idx == 2:
+      question = f'¿Usted sabe si el {trip}  ? \
+      \nIngrese uno de los siguientes valores según su respuesta: -1:NO | 0: NO SÉ | 1:SI   '
+
+    if idx == 3:
+      question = f'¿Que tan {trip.split()[-1]} diría que {trip.split()[-2]} el animal? \
+      \nIngrese un valor en el rango [-1,1]: '
+
+    if idx == 4:
+      question = f'¿Animal está en el conjunto de tipo {trip.split()[-1]}?  \
+      \nIngrese uno de los siguientes valores según su respuesta: -1:NO | 0: NO SÉ | 1:SI   '
+
+    q_var.set(question)
+    button.wait_variable(ans_var)
+    H = Hecho([trip,k*float(ans_var.get())])
+    return H
 
   def add_to_BH(self,H, marked = False):
     if marked:
@@ -142,7 +176,7 @@ def main_gui():
             print(f'La hipotesis "{h}" ha sido comprobada con un nivel de certeza {AEI.CH[h]}.')
             claus_used = BR[AEI.get_rules(h)[0]].premisa
             hechos_usados = [(claus,AEI.BH[claus]) for claus in claus_used]
-            ans = f'El {h} con nivel de certeza {AEI.CH[h]}.\nLos hechos que han permitido esta conlusión han sido:\n{" | ".join([f"{H[0]} con certeza {H[1]}" for H in hechos_usados])}'
+            ans = f'El {h} con nivel de certeza {AEI.CH[h]}.\nLos hechos que han permitido esta conclusión han sido:\n{" | ".join([f"{H[0]} con certeza {H[1]}" for H in hechos_usados])}'
             path = f"img/{h.split(' ')[-1]}.jpg"
             final_var.set(ans)
             display_image(path)
@@ -164,7 +198,7 @@ def main_gui():
         print(f'La hipotesis "{h_max}" ha sido comprobada con un nivel de certeza {vc_max}.')
         claus_used = BR[AEI.get_rules(h_max)[0]].premisa
         hechos_usados = [(claus,AEI.BH[claus]) for claus in claus_used]
-        ans = f'El {h_max} con nivel de certeza {vc_max}.\nLos hechos que han permitido esta conlusión han sido:\n{" | ".join([f"{H[0]} con certeza {H[1]}" for H in hechos_usados])}'
+        ans = f'El {h_max} con nivel de certeza {vc_max}.\nLos hechos que han permitido esta conclusión han sido:\n{" | ".join([f"{H[0]} con certeza {H[1]}" for H in hechos_usados])}'
         path = f"img/{h_max.split(' ')[-1]}.jpg"
         final_var.set(ans)
         display_image(path)
