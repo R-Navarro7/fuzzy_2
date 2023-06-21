@@ -21,7 +21,7 @@ def main(bonus=False):
         if AEI.CH[h] > vc_max:
             h_max, vc_max = h, AEI.CH[h]
     if vc_max == 0:
-        print(f'No se ha podido comprobar ninguna hipotesis con un nivel de certeza mayor a {AEI.alpha}')
+        print(f'No se ha podido comprobar ninguna hipotesis con un nivel de certeza mayor a 0')
         return
     else:
         print(f'La hipotesis "{h_max}" ha sido comprobada con un nivel de certeza {vc_max}.')

@@ -190,9 +190,10 @@ def conjuncion(premisa_vc):
 
 def disyuncion(vc, vc_h):
   '''max_mod: retorna vc de premisa, elegido como el item con max valor abs'''
-  vc_list = np.array([vc, vc_h])
-  max_idx = np.argmax(vc_list)
-  return vc_list[max_idx]
+  if abs(vc) > abs(vc_h): return vc
+  else:
+    return vc_h
+
 
 def propagar(vc, Rule, eps):
   '''Recibe vc de premisa agregada y regla

@@ -2,11 +2,12 @@ from tkinter import *
 from utils import *
 from PIL import Image, ImageTk
 import pandas as pd
+import reticulado
 import os
 
 
 class Backward_Chain_System_GUI():
-  def __init__(self, alpha=0.7, beta=0.2, gamma=0.85, eps=0.5, gui = False):
+  def __init__(self, alpha=0.7, beta=0.2, gamma=0.85, eps=0.5, bonus = True):
     self.alpha = alpha
     self.beta = beta
     self.gamma = gamma
@@ -14,7 +15,7 @@ class Backward_Chain_System_GUI():
     self.BH = {}
     self.BR = Base_Reglas()
     self.CH = Conj_Hipotesis(self.BR)
-
+    self.bonus = True
     # Opcional 5.2
     self.marcas = {}
 
@@ -45,72 +46,33 @@ class Backward_Chain_System_GUI():
     return H
 
 
-  def add_to_BH(self,H):
-    if abs(H.vc)>=self.beta:
+  def add_to_BH(self,H, marked = False):
+    if marked:
       in_BH, vc = self.check_BH(H.trip)
       if in_BH:
         self.BH[H.trip]= disyuncion(H.vc, vc)
       else:
         self.BH[H.trip] = H.vc
-    else: pass
-
-  def check_premisa(self, premisa):
-    premisa_vc = []
-    for clause in premisa:
-      in_BH, clause_vc = self.check_BH(clause)
-      if in_BH:
-        continue
-      else:
-        clause_rules = self.get_rules(clause)
-        if len(clause_rules):
-          for rule_id in clause_rules:
-            gamma_break = False
-            r = self.BR[rule_id]
-            prem_vc =self.check_premisa(r.premisa)
-            conc = propagar(prem_vc, r, self.eps)
-            for h in conc:
-              if h.vc >= self.gamma and h.trip == clause: gamma_break = True
-              self.add_to_BH(h)
-            '''
-              Se aplica el gamma break para no intentar mejorar mas el Hecho con esta clausula
-              TODO: Ver como aplicar el gamma cuando el hecho ya esta en BH (no se si es necesario)
-            '''
-            if gamma_break: break
+    else:
+      if abs(H.vc)>=self.beta:
+        in_BH, vc = self.check_BH(H.trip)
+        if in_BH:
+          self.BH[H.trip]= disyuncion(H.vc, vc)
         else:
-          h = self.ask_user(clause)
-          self.add_to_BH(h)
+          self.BH[H.trip] = H.vc
+      else: pass
 
-    # Se revisa por ultima vez si la clausula entro a la base de hechos y se rescata su vc, si no se pregunta al usuario
-    for clause in premisa:
-      in_BH, vc = self.check_BH(clause)
-      if in_BH:
-        premisa_vc.append(vc)
-      else:
-        h = self.ask_user(clause)
-        self.add_to_BH(h)
-        premisa_vc.append(h.vc)
-    return conjuncion(premisa_vc)
-
-
-
-  def check_hipotesis(self, hip, bonus = False):
+  def check_hipotesis(self, hip):
     rule_id = self.get_rules(hip)[0] # Solo hay una regla que concluya cada hipotesis por lo que esta lista solo tiene 1 elemento
     rule = self.BR[rule_id]
     premisa = rule.premisa
-    if bonus:
-      premisa_vc = self.bonus_check_premisa(premisa)
-      hip_conc = propagar(premisa_vc, rule, self.eps)
-      print(self.BH)
-      if len(hip_conc):
-        hip = hip_conc[0] # en este nivel solo puede haber 1 elemento en la conclusion
-        self.CH[hip.trip] = hip.vc
-    else:
-      premisa_vc = self.check_premisa(premisa)
-      hip_conc = propagar(premisa_vc, rule, self.eps)
-      print(self.BH)
-      if len(hip_conc):
-        hip = hip_conc[0] # en este nivel solo puede haber 1 elemento en la conclusion
-        self.CH[hip.trip] = hip.vc
+    premisa_vc = self.bonus_check_premisa(premisa)
+    hip_conc = propagar(premisa_vc, rule, self.eps)
+    print(self.BH)
+    if len(hip_conc):
+      hip = hip_conc[0] # en este nivel solo puede haber 1 elemento en la conclusion
+      self.CH[hip.trip] = hip.vc
+
 
   def precalificador(self, premisa):
     for claus in premisa:
@@ -122,48 +84,7 @@ class Backward_Chain_System_GUI():
   def add_to_marks(self, H): # Funcion que marca una clausula si el usuario presenta incertidumbre al llegar al Caso 3.
     if abs(H.vc) < self.beta:
       self.marcas[H.trip] = H.vc
-
-  def generar_reticulado_BR(self):
-    BR = self.BR
-    reglas_id = BR.keys()
-    premisas = []
-    conclusiones = []
-    dependencias = []
-    tipos= []
-
-    for id in reglas_id:
-
-      regla = BR[id]
-      premisas.append(regla.premisa)
-
-      concs = []
-      hip = False
-
-      for H in regla.conc:
-        concs.append((H.trip,H.vc))
-        if H.trip in self.CH.keys():
-          hip = True
-      conclusiones.append(concs)
-
-      deps = {}
-      for clausula in regla.premisa:
-        deps[clausula] = self.get_rules(clausula)
-      dependencias.append(deps)
-
-      if hip:
-        tipos.append('Hipotesis')
-      else:
-        tipos.append('Conclusion Intermedia')
-
-    BR_dict = {
-        'Reglas': reglas_id,
-        'Premisa': premisas,
-        'Conclusion': conclusiones,
-        'Dependencias': dependencias,
-        'Tipo': tipos,
-    }
-    BR_df = pd.DataFrame(BR_dict)
-    return BR_df
+      self.add_to_BH(H, marked=True)
 
   def bonus_check_premisa(self, premisa):
     premisa_vc = []
@@ -178,7 +99,7 @@ class Backward_Chain_System_GUI():
             gamma_break = False
             r = self.BR[rule_id]
             if self.precalificador(r.premisa): # Se aplica el calificador antes de chequear la premisa de las reglas que describen la clausula
-              prem_vc =self.check_premisa(r.premisa)
+              prem_vc =self.bonus_check_premisa(r.premisa)
               conc = propagar(prem_vc, r, self.eps)
               for h in conc:
                 if h.vc >= self.gamma and h.trip == clause: gamma_break = True
@@ -192,11 +113,9 @@ class Backward_Chain_System_GUI():
           if clause in self.marcas.keys(): # Se revisa si esta marcada y si lo esta se ignora
             pass
           else:
-            if clause in self.marcas.keys(): pass # No se pregunta si la clausula esta marcada
-            else:
-              h = self.ask_user(clause)
-              self.add_to_BH(h)
-              self.add_to_marks(h)
+            h = self.ask_user(clause)
+            self.add_to_BH(h)
+            self.add_to_marks(h)
 
     # Se revisa por ultima vez si la clausula esta en la base de hechos o si esta marcada y se rescata su vc, si no, se pregunta al usuario
     for clause in premisa:
@@ -208,16 +127,17 @@ class Backward_Chain_System_GUI():
       else:
         h = self.ask_user(clause)
         self.add_to_BH(h)
+        self.add_to_marks(h)
         premisa_vc.append(h.vc)
     return conjuncion(premisa_vc)
 
-def main_gui(bonus=False, gui = False):
+def main_gui():
     AEI = Backward_Chain_System_GUI()
 
     hipotesis = AEI.CH.keys()
 
     for h in hipotesis:
-        AEI.check_hipotesis(h, bonus = bonus)
+        AEI.check_hipotesis(h)
         if AEI.CH[h] >= AEI.alpha:
             print(f'La hipotesis "{h}" ha sido comprobada con un nivel de certeza {AEI.CH[h]}.')
             claus_used = BR[AEI.get_rules(h)[0]].premisa
@@ -273,8 +193,11 @@ def init_img():
 	photo.image = img
 	photo.grid(row=7,column=2)
 
+def show_ret():
+  reticulado.show()
+
 def start():
-	main_gui(bonus=True)
+	main_gui()
 
 def restart_aei():
 	init_img()
@@ -288,7 +211,7 @@ def exit_programm():
 
 master=tkinter.Tk()
 master.title("'Guess the Animal :D'")
-master.geometry("680x680")
+master.geometry("740x620")
 
 master.protocol('WM_DELETE_WINDOW', exit_programm)
 
@@ -323,7 +246,8 @@ final_label=Label(master, textvariable=final_var)
 final_label.grid(row=6,column=2)
 
 init_img()
-
+button_ret=tkinter.Button(master, text="Base de Reglas", command=show_ret)
+button_ret.grid(row=1,column=3)
 button_r=tkinter.Button(master, text="Reiniciar", command=restart_aei)
 button_r.grid(row=8,column=2)
 button_r=tkinter.Button(master, text="Salir", command=exit_programm)

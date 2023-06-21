@@ -38,14 +38,21 @@ class Backward_Chain_System():
     user_input = input(f'\n Cual es el valor de certeza que tiene respecto a la siguiente afirmación: "{trip}" \n Ingrese un valor en el rango [-1,1]:   ')
     return Hecho([trip,float(user_input)])
 
-  def add_to_BH(self,H):
-    if abs(H.vc)>=self.beta:
+  def add_to_BH(self,H, marked = False):
+    if marked:
       in_BH, vc = self.check_BH(H.trip)
       if in_BH:
         self.BH[H.trip]= disyuncion(H.vc, vc)
       else:
         self.BH[H.trip] = H.vc
-    else: pass
+    else:
+      if abs(H.vc)>=self.beta:
+        in_BH, vc = self.check_BH(H.trip)
+        if in_BH:
+          self.BH[H.trip]= disyuncion(H.vc, vc)
+        else:
+          self.BH[H.trip] = H.vc
+      else: pass
 
   def check_premisa(self, premisa):
     premisa_vc = []
@@ -119,6 +126,7 @@ class Backward_Chain_System():
   def add_to_marks(self, H): # Funcion que marca una clausula si el usuario presenta incertidumbre al llegar al Caso 3.
     if abs(H.vc) < self.beta:
       self.marcas[H.trip] = H.vc
+      self.add_to_BH(H, marked=True)
 
   # 5.3
   def generar_reticulado_BR(self):
@@ -176,7 +184,7 @@ class Backward_Chain_System():
             gamma_break = False
             r = self.BR[rule_id]
             if self.precalificador(r.premisa): # Se aplica el calificador antes de chequear la premisa de las reglas que describen la clausula
-              prem_vc =self.check_premisa(r.premisa)
+              prem_vc =self.bonus_check_premisa(r.premisa)
               conc = propagar(prem_vc, r, self.eps)
               for h in conc:
                 if h.vc >= self.gamma and h.trip == clause: gamma_break = True
@@ -206,5 +214,6 @@ class Backward_Chain_System():
       else:
         h = self.ask_user(clause)
         self.add_to_BH(h)
+        self.add_to_marks(h)
         premisa_vc.append(h.vc)
     return conjuncion(premisa_vc)

@@ -1,0 +1,190 @@
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Reglas</th>
+      <th>Premisa</th>
+      <th>Conclusion</th>
+      <th>Dependencias</th>
+      <th>Tipo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>R1</td>
+      <td>[animal tiene pelo]</td>
+      <td>[(animal es mamífero, 0.8), (animal es ave, -1.0), (animal es reptil, -1.0)]</td>
+      <td>{'animal tiene pelo': []}</td>
+      <td>Conclusion Intermedia</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>R2</td>
+      <td>[animal da leche]</td>
+      <td>[(animal es mamífero, 1.0), (animal es ave, -1.0), (animal es reptil, -1.0)]</td>
+      <td>{'animal da leche': []}</td>
+      <td>Conclusion Intermedia</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>R3</td>
+      <td>[animal pone huevos, animal tiene piel dura]</td>
+      <td>[(animal es mamífero, -1.0), (animal es ave, -1.0), (animal es reptil, 1.0)]</td>
+      <td>{'animal pone huevos': [], 'animal tiene piel dura': []}</td>
+      <td>Conclusion Intermedia</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>R4</td>
+      <td>[animal pone huevos, animal puede volar]</td>
+      <td>[(animal es ave, 1.0), (animal es reptil, -1.0)]</td>
+      <td>{'animal pone huevos': [], 'animal puede volar': []}</td>
+      <td>Conclusion Intermedia</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>R5</td>
+      <td>[animal tiene plumas]</td>
+      <td>[(animal es mamífero, -1.0), (animal es ave, 1.0), (animal es reptil, -1.0)]</td>
+      <td>{'animal tiene plumas': []}</td>
+      <td>Conclusion Intermedia</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>R6</td>
+      <td>[animal come carne]</td>
+      <td>[(animal es carnívoro, 1.0)]</td>
+      <td>{'animal come carne': []}</td>
+      <td>Conclusion Intermedia</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>R7</td>
+      <td>[animal tiene garras]</td>
+      <td>[(animal es carnívoro, 0.8)]</td>
+      <td>{'animal tiene garras': []}</td>
+      <td>Conclusion Intermedia</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>R8</td>
+      <td>[animal es mamífero, animal tiene pezuñas]</td>
+      <td>[(animal es ungulado, 1.0)]</td>
+      <td>{'animal es mamífero': ['R1', 'R2', 'R3', 'R5'], 'animal tiene pezuñas': []}</td>
+      <td>Conclusion Intermedia</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>R9</td>
+      <td>[animal es mamífero, animal es rumiante]</td>
+      <td>[(animal es ungulado, 0.75)]</td>
+      <td>{'animal es mamífero': ['R1', 'R2', 'R3', 'R5'], 'animal es rumiante': []}</td>
+      <td>Conclusion Intermedia</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>R10</td>
+      <td>[animal vive con personas]</td>
+      <td>[(animal es doméstico, 0.9)]</td>
+      <td>{'animal vive con personas': []}</td>
+      <td>Conclusion Intermedia</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>R11</td>
+      <td>[animal vive en zoológico]</td>
+      <td>[(animal es doméstico, -0.8)]</td>
+      <td>{'animal vive en zoológico': []}</td>
+      <td>Conclusion Intermedia</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>R12</td>
+      <td>[animal es mamífero, animal es carnívoro, animal tiene manchas oscuras]</td>
+      <td>[(animal es cheetah, 0.9)]</td>
+      <td>{'animal es mamífero': ['R1', 'R2', 'R3', 'R5'], 'animal es carnívoro': ['R6', 'R7'], 'animal tiene manchas oscuras': []}</td>
+      <td>Hipotesis</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>R13</td>
+      <td>[animal es mamífero, animal es carnívoro, animal tiene rayas negras]</td>
+      <td>[(animal es tigre, 0.85)]</td>
+      <td>{'animal es mamífero': ['R1', 'R2', 'R3', 'R5'], 'animal es carnívoro': ['R6', 'R7'], 'animal tiene rayas negras': []}</td>
+      <td>Hipotesis</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>R14</td>
+      <td>[animal es mamífero, animal es carnívoro, animal es doméstico]</td>
+      <td>[(animal es perro, 0.9)]</td>
+      <td>{'animal es mamífero': ['R1', 'R2', 'R3', 'R5'], 'animal es carnívoro': ['R6', 'R7'], 'animal es doméstico': ['R10', 'R11']}</td>
+      <td>Hipotesis</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>R15</td>
+      <td>[animal es reptil, animal es doméstico]</td>
+      <td>[(animal es tortuga, 0.7)]</td>
+      <td>{'animal es reptil': ['R1', 'R2', 'R3', 'R4', 'R5'], 'animal es doméstico': ['R10', 'R11']}</td>
+      <td>Hipotesis</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>R16</td>
+      <td>[animal es mamífero, animal es ungulado, animal tiene cuello largo]</td>
+      <td>[(animal es jirafa, 1.0)]</td>
+      <td>{'animal es mamífero': ['R1', 'R2', 'R3', 'R5'], 'animal es ungulado': ['R8', 'R9'], 'animal tiene cuello largo': []}</td>
+      <td>Hipotesis</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>R17</td>
+      <td>[animal es mamífero, animal es ungulado, animal tiene rayas negras]</td>
+      <td>[(animal es cebra, 0.95)]</td>
+      <td>{'animal es mamífero': ['R1', 'R2', 'R3', 'R5'], 'animal es ungulado': ['R8', 'R9'], 'animal tiene rayas negras': []}</td>
+      <td>Hipotesis</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>R18</td>
+      <td>[animal es mamífero, animal puede volar, animal es feo]</td>
+      <td>[(animal es murciélago, 0.9)]</td>
+      <td>{'animal es mamífero': ['R1', 'R2', 'R3', 'R5'], 'animal puede volar': [], 'animal es feo': []}</td>
+      <td>Hipotesis</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>R19</td>
+      <td>[animal es ave, animal vuela bien]</td>
+      <td>[(animal es gaviota, 0.9)]</td>
+      <td>{'animal es ave': ['R1', 'R2', 'R3', 'R4', 'R5'], 'animal vuela bien': []}</td>
+      <td>Hipotesis</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>R20</td>
+      <td>[animal es ave, animal corre rápido]</td>
+      <td>[(animal es avestruz, 1.0)]</td>
+      <td>{'animal es ave': ['R1', 'R2', 'R3', 'R4', 'R5'], 'animal corre rápido': []}</td>
+      <td>Hipotesis</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>R21</td>
+      <td>[animal es ave, animal es parlanchín]</td>
+      <td>[(animal es loro, 0.95)]</td>
+      <td>{'animal es ave': ['R1', 'R2', 'R3', 'R4', 'R5'], 'animal es parlanchín': []}</td>
+      <td>Hipotesis</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>R22</td>
+      <td>[animal es mamífero, animal es grande, animal es ungulado, animal tiene trompa]</td>
+      <td>[(animal es elefante, 0.9)]</td>
+      <td>{'animal es mamífero': ['R1', 'R2', 'R3', 'R5'], 'animal es grande': [], 'animal es ungulado': ['R8', 'R9'], 'animal tiene trompa': []}</td>
+      <td>Hipotesis</td>
+    </tr>
+  </tbody>
+</table>
