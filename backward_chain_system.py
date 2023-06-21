@@ -189,16 +189,16 @@ class Backward_Chain_System():
     k=1
     if idx == 0:
       question = f'\nEs cierto que el {trip}  ? \
-      \nIngrese uno de los siguientes valores según su respuesta: 1:SI | -1: NO | 0:NO SE   '
+      \nIngrese uno de los siguientes valores según su respuesta: -1:NO | 0: NO SÉ | 1:SI   '
 
     if idx == 1:
       k = -1
       question = f'\nEs falso que el {trip}  ? \
-      \nIngrese uno de los siguientes valores según su respuesta: 1:SI | -1: NO | 0:NO SE   '
+      \nIngrese uno de los siguientes valores según su respuesta: -1:NO | 0: NO SÉ | 1:SI   '
 
     if idx == 2:
       question = f'¿Usted sabe si el {trip}  ? \
-      \nIngrese uno de los siguientes valores según su respuesta: 1:SI | -1: NO | 0:NO SE   '
+      \nIngrese uno de los siguientes valores según su respuesta: -1:FALSO | 0:NO SÉ | 1:VERDADERO   '
 
     if idx == 3:
       question = f'¿Que tan {trip.split()[-1]} diría que {trip.split()[-2]} el animal? \
@@ -206,7 +206,7 @@ class Backward_Chain_System():
 
     if idx == 4:
       question = f'¿Animal está en el conjunto de tipo {trip.split()[-1]}?  \
-      \nIngrese uno de los siguientes valores según su respuesta: 1:SI | -1: NO | 0:NO SE   '
+      \nIngrese uno de los siguientes valores según su respuesta: -1:NO | 0: NO SÉ | 1:SI   '
     user_input = input(question)
     vc = user_input
     return Hecho([trip,k*float(vc)])

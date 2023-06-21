@@ -41,11 +41,13 @@ class Backward_Chain_System_GUI():
 
     q_bin = ['animal tiene trompa','animal vive en zoológico',
                 'animal vive con personas','animal come carne',
-                'animal pone huevos','animal da leche', 'animal tiene piel dura' ]
+                'animal pone huevos' ]
     q_neg = ['animal puede volar', 'animal tiene rayas negras',
               'animal tiene manchas oscuras','animal tiene pezuñas',
-              'animal tiene garras', 'animal tiene plumas','animal tiene pelo']
-    q_unk = ['animal es parlanchín','animal es doméstico']
+              'animal tiene garras', 'animal tiene plumas']
+    q_unk = ['animal es parlanchín','animal es doméstico',
+            'animal da leche', 'animal tiene piel dura',
+            'animal tiene pelo']
     q_range = ['animal vuela bien','animal es feo', 'animal corre rápido',
                 'animal tiene cuello largo', 'animal es grande']
     q_conj = ['animal es mamífero', 'animal es ave', 'animal es reptil',
@@ -63,9 +65,10 @@ class Backward_Chain_System_GUI():
       k = -1
       question = f'\nEs falso que el {trip}  ? \
       \nIngrese uno de los siguientes valores según su respuesta: -1:NO | 0: NO SÉ | 1:SI   '
+      
     if idx == 2:
       question = f'¿Usted sabe si el {trip}  ? \
-      \nIngrese uno de los siguientes valores según su respuesta: -1:NO | 0: NO SÉ | 1:SI   '
+      \nIngrese uno de los siguientes valores según su respuesta: -1:FALSO | 0:NO SÉ | 1:VERDADERO   '
 
     if idx == 3:
       question = f'¿Que tan {trip.split()[-1]} diría que {trip.split()[-2]} el animal? \
