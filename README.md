@@ -32,7 +32,7 @@ pip install -r requirements.txt
 python main.py --bonus [yes/no]
 ```
 
-Asegúrate de tener Python 3+ instalado en tu sistema. La opción `--bonus` es opcional y debe proporcionarse como 'yes' si deseas ejecutar el modo de bonificación, o 'no' si no lo deseas.
+Asegúrate de tener Python 3+ instalado en tu sistema. La opción `--bonus` no es opcional y debe proporcionarse como 'yes' si deseas ejecutar el modo de bonificación, o 'no' si no lo deseas.
 
 ¡Diviértete adivinando animales con nuestro sistema basado en conocimiento!
 
